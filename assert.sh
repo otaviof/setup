@@ -10,6 +10,11 @@ source common.sh
 echo "# Asserting the Container Registry rollout status..."
 rollout_status "${REGISTRY_NAMESPACE}" "registry"
 
+echo "# Asserting the /etc/hosts have been patched..."
+if ! grep -E -q '127.0.0.1.*registry' /etc/hosts ; then
+	fail "/etc/hosts does not include the registry hostname"
+fi
+
 echo "# Asserting the Tekton Pipeline Controller"
 rollout_status "${TEKTON_NAMESPACE}" "tekton-pipelines-controller"
 

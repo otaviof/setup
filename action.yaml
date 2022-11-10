@@ -25,6 +25,14 @@ inputs:
     description: When enabled, the action deploys a Container Registry instance
     required: true
     default: "true"
+  registry-hostname:
+    description: Container Registry hostname inside KinD
+    required: true
+    default: registry.registry.svc.cluster.local
+  patch-etc-hosts:
+    description: Patch "/etc/hosts" to alias the Container Registry hostname to "127.0.0.1"
+    required: true
+    default: "true"
 runs:
   using: composite
   steps:
@@ -46,6 +54,14 @@ runs:
         TEKTON_VERSION: ${{ inputs.tekton-version }}
       working-directory: ${{ github.action_path }}
       run: ./install-tekton.sh
+
+    # patches the /etc/hosts to include the container registry hostname resolving to 127.0.0.1
+    - shell: bash
+      if: ${{ inputs.patch-etc-hosts == 'true' }}
+      env:
+        REGISTRY_HOSTNAME: ${{ inputs.registry-hostname }}
+      working-directory: ${{ github.action_path }}
+      run: sudo ./patch-etc-hosts.sh
 
     # checking out the build controller project locally to perform the rollout and inspection of the
     # controller instance in the cluster

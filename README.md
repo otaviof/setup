@@ -45,17 +45,21 @@ jobs:
           cli-ref: v0.11.0
           kind-cluster-name: kind
           setup-registry: true
+          registry-hostname: registry.registry.svc.cluster.local
+          patch-etc-hosts: true
 ```
 
 The inputs are described below:
 
-| Input               | Default   | Description                                                   |
-|---------------------|-----------|---------------------------------------------------------------|
-| `tekton-version`    | `v0.38.3` | [Tekton Pipeline][tektonPipeline] release version             |
-| `shipwright-ref`    | `v0.11.0` | [Shipwright Build Controller][shpBuild] repository tag or SHA |
-| `cli-ref`           | `v0.11.0` | [Shipwright CLI][shpCLI] repository tag or SHA                |
-| `kind-cluster-name` | `kind`    | KinD cluster name                                             |
-| `setup-registry`    | `true`    | Setup a Container Registry instance (`true` or `false`)       |
+| Input               | Default                               | Description                                                                |
+| ------------------- | ------------------------------------- | -------------------------------------------------------------------------- |
+| `tekton-version`    | `v0.38.3`                             | [Tekton Pipeline][tektonPipeline] release version                          |
+| `shipwright-ref`    | `v0.11.0`                             | [Shipwright Build Controller][shpBuild] repository tag or SHA              |
+| `cli-ref`           | `v0.11.0`                             | [Shipwright CLI][shpCLI] repository tag or SHA                             |
+| `kind-cluster-name` | `kind`                                | KinD cluster name                                                          |
+| `setup-registry`    | `true`                                | Setup a Container Registry instance (`true` or `false`)                    |
+| `registry-hostname` | `registry.registry.svc.cluster.local` | Container Registry hostname inside KinD                                    |
+| `patch-etc-hosts`   | `true`                                | Patch "/etc/hosts" to alias the Container Registry hostname to "127.0.0.1" |
 
 The Shipwright components [Build Controller][shpBuild] and [CLI][shpCLI] can be deployed using a specific commit SHA or tag.
 
