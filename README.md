@@ -65,9 +65,17 @@ The Shipwright components [Build Controller][shpBuild] and [CLI][shpCLI] can be 
 
 ### Inside the Shipwright Organization
 
-This action inspects the current context before checking out the [Build Controller][shpBuild] and the [CLI][shpCLI] repositories, so when it's being executed against forks or the actual repositories, the action uses the local data.
+By default the action execute a checkout of the Build and CLI repositories, however when working on those specific projects you can skip using `_ignore`. As the following example:
 
-In other words, this action only performs the remote repository checkout, and therefore can be employed on the [`shipwright-io` organization][shpGitHubOrg] and as well repository forks you're working on.
+```yml
+jobs:
+  use-action:
+    steps:
+      - uses: shipwright-io/setup@v1
+        with:
+          shipwright-ref: _ignore
+          cli-ref: _ignore
+```
 
 ## Contributing
 

@@ -70,11 +70,12 @@ runs:
         repository: shipwright-io/build
         ref: ${{ inputs.shipwright-ref }}
         path: src/build
-      if: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
+      if: ${{ inputs.shipwright-ref != '_ignore' }}
     - shell: bash
       env:
         KIND_CLUSTER_NAME: ${{ inputs.kind-cluster-name }}
       working-directory: ${{ github.action_path }}
+      if: ${{ inputs.shipwright-ref != '_ignore' }}
       run: ./install-shipwright.sh
 
     # checking out the CLI project locally, performing the installation to let it available on PATH
@@ -83,7 +84,8 @@ runs:
         repository: shipwright-io/cli
         ref: ${{ inputs.cli-ref }}
         path: src/cli
-      if: ${{ github.event.pull_request.head.repo.full_name != github.repository }}
+      if: ${{ inputs.cli-ref != '_ignore' }}
     - shell: bash
       working-directory: ${{ github.action_path }}
+      if: ${{ inputs.cli-ref != '_ignore' }}
       run: ./install-cli.sh
