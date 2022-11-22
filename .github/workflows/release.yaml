@@ -1,39 +1,30 @@
 ---
-name: Release
+name: release
 
 on:
   push:
+    tags-ignore:
+      - '**'
+    paths-ignore:
+      - '**.md'
     branches:
       - main
 
 jobs:
   release:
-    name: release
-    if: ${{ github.repository == 'shipwright-io/setup' }}
     runs-on: ubuntu-latest
+    if: ${{ github.repository == 'shipwright-io/setup' }}
     env:
       VERSION: "1"
     steps:
       - uses: actions/checkout@v3
-      - name: Tag vN
+
+      - name: git-configuration
         run: |
-          echo "Pushing tag v${VERSION}"
           git config user.name ${{ github.actor }}
           git config user.email ${{ github.actor }}@users.noreply.github.com
-          git tag --force "v${VERSION}"
-          git push --force origin "v${VERSION}"
-      - name: Tag vN.M
-        run: |
-          git fetch --tags
-          LAST_TAG="$(git tag --list --sort=v:refname | grep "v${VERSION}." | tail -n 1)"
-          if [ "${LAST_TAG}" == "" ]; then
-            NEXT_TAG="v${VERSION}.0"
-          else
-            LAST_TAG_MINOR="${LAST_TAG/v${VERSION}./}"
-            NEXT_TAG_MINOR=$((LAST_TAG_MINOR+1))
-            NEXT_TAG="v${VERSION}.${NEXT_TAG_MINOR}"
-          fi
 
-          echo "Pushing tag ${NEXT_TAG}"
-          git tag "${NEXT_TAG}"
-          git push origin "${NEXT_TAG}"
+      - name: release-action
+        working-directory: ${{ github.action_path }}
+        run: |
+          eval "$(./hack/release.sh)"
